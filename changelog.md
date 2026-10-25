@@ -1,6 +1,3 @@
-# v0.3.1
-- Pause menu: the Frame Windows button is now placed under the options (gear) button in its own menu. In v0.3.0 it was added to the "right-button-menu" column, which only has room for the gear, so the button ended up off screen.
-
 # v0.3.0
 **S&Q (Speed and Quality) - new main setting, first in the list**
 - **Fast & Medium** (default): exactly the v0.2 behaviour - saved game states at quiet moments, early pass, control runs.

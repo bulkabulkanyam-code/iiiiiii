@@ -149,29 +149,18 @@ class $modify(FWMPauseLayer, PauseLayer) {
         auto btn = CCMenuItemSpriteExtra::create(spr, this, menu_selector(FWMPauseLayer::onFrameWindows));
         btn->setID("frame-window-button"_spr);
 
-        // The button lives in its own menu, placed right below the options (gear) button. Adding it to the
-        // "right-button-menu" column put it outside of the screen (that menu only has room for the gear).
-        auto size = CCDirector::sharedDirector()->getWinSize();
-        CCPoint pos{size.width - 28.f, size.height - 28.f - 56.f};  // where the gear usually is, one step down
         if (auto menu = this->getChildByID("right-button-menu")) {
-            CCNode* anchor = menu->getChildByID("options-button");
-            if (!anchor && menu->getChildrenCount() > 0) anchor = static_cast<CCNode*>(menu->getChildren()->objectAtIndex(0));
-            if (anchor) {
-                auto world = menu->convertToWorldSpace(anchor->getPosition());
-                pos = this->convertToNodeSpace(world);
-                pos.y -= anchor->getScaledContentSize().height * 0.5f + 28.f;
-            }
+            menu->addChild(btn);
+            menu->updateLayout();
+        } else {
+            // Fallback when another mod changed the layout of the pause menu.
+            auto size = CCDirector::sharedDirector()->getWinSize();
+            auto menu2 = CCMenu::create();
+            menu2->setPosition({size.width - 28.f, 28.f});
+            menu2->addChild(btn);
+            btn->setPosition({0.f, 0.f});
+            this->addChild(menu2, 100);
         }
-        pos.x = std::clamp(pos.x, 28.f, size.width - 28.f);
-        pos.y = std::clamp(pos.y, 28.f, size.height - 28.f);
-        log::info("Frame Window pause button at ({:.0f}, {:.0f})", pos.x, pos.y);
-
-        auto ownMenu = CCMenu::create();
-        ownMenu->setID("frame-window-menu"_spr);
-        ownMenu->setPosition(pos);
-        btn->setPosition({0.f, 0.f});
-        ownMenu->addChild(btn);
-        this->addChild(ownMenu, 100);
     }
 
     void onResume(CCObject* sender) {
